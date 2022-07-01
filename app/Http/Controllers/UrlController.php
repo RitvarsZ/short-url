@@ -17,6 +17,21 @@ class UrlController extends Controller
     public function create(CreateUrlRequest $request)
     {
         $data = $request->validated();
+        $fullUrl = $data['long_url'];
+
+        $existingUrl = Url::firstWhere('full_url', $fullUrl);
+
+        if ($existingUrl) {
+            $url = $existingUrl;
+        } else {
+            $url = Url::create([
+                'full_url' => $fullUrl
+            ]);
+        }
+
+        $shortUrl = url('/'.$url->hash);
+
+        return view('success', ['shortUrl' => $shortUrl]);
     }
 
     /**

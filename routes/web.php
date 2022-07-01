@@ -15,8 +15,8 @@ use App\Http\Controllers\UrlController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home');
+})->name('home');
 
-Route::post('/create', [UrlController::class, 'create']);
-Route::get('/{url}', [UrlController::class, 'show']);
+Route::post('/create', [UrlController::class, 'create'])->name('url.create');
+Route::get('/{url}', [UrlController::class, 'show'])->name('url.show');

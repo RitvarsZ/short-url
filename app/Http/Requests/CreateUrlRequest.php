@@ -13,7 +13,7 @@ class CreateUrlRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class CreateUrlRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'long_url' => 'required|max:2048|url',
         ];
     }
 }
