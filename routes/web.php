@@ -13,10 +13,11 @@ use App\Http\Controllers\UrlController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
     return view('home');
 })->name('home');
 
-Route::post('/create', [UrlController::class, 'create'])->name('url.create');
-Route::get('/{url}', [UrlController::class, 'show'])->name('url.show');
+Route::middleware(['throttle:url'])->group(function () {
+    Route::post('/create', [UrlController::class, 'create'])->name('url.create');
+    Route::get('/{url}', [UrlController::class, 'show'])->name('url.show');
+});
