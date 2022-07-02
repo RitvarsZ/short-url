@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateUrlRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redis; 
+use App\Http\Requests\CreateUrlRequest;
 use App\Models\Url;
 
 class UrlController extends Controller
@@ -34,8 +35,15 @@ class UrlController extends Controller
      * @param Url $url
      * @return RedirectResponse
      */
-    public function show(Url $url)
+    public function show(string $url)
     {
-        return redirect($url->full_url);
+        if ($fullUrl = Redis::get('url:'.$url)) {
+            return redirect($fullUrl, 302, ['X-Redis-Cache' => 'HIT']);
+        }
+
+        $url = Url::findOrFail($url);
+        Redis::set('url:'.$url->hash, $url->full_url);
+
+        return redirect($url->full_url, 302, ['X-Redis-Cache' => 'MISS']);
     }
 }
