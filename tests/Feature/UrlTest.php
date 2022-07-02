@@ -52,24 +52,4 @@ class UrlTest extends TestCase
         $response->assertRedirect('/');
         $response->assertInvalid(['long_url']);
     }
-
-    /**
-     * Test if existing url gets returned if it had already been shortened.
-     *
-     * @return void
-     */
-    public function test_existing_url_gets_returned()
-    {
-        $url = Url::factory()->create([
-            'full_url' => 'https://google.com'
-        ]);
-
-        $shortUrl = url('/'.$url->hash);
-
-        $response = $this->post('/create', [
-            'long_url' => 'https://google.com'
-        ]);
-
-        $this->assertEquals($shortUrl, $response['shortUrl']);
-    }
 }
